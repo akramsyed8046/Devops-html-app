@@ -25,14 +25,37 @@ pipeline {
             }
         }
 
+        stage('Test K8s Connection') {
+            steps {
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
+                    sh '''
+                    echo "Checking Kubernetes connection..."
+                    kubectl --kubeconfig=$KUBECONFIG get nodes
+                    '''
+                }
+            }
+            post {
+                success {
+                    emailext subject: "✅ K8s Connection SUCCESS",
+                    body: "Jenkins connected to Kubernetes successfully.",
+                    to: "${EMAIL}"
+                }
+                failure {
+                    emailext subject: "❌ K8s Connection FAILED",
+                    body: "Jenkins could not connect to Kubernetes.",
+                    to: "${EMAIL}"
+                }
+            }
+        }
+
         stage('Deploy to Kubernetes') {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
                     sh '''
-                    kubectl get nodes
-                    kubectl apply -f deployment.yaml
-                    kubectl apply -f service.yaml
-                    kubectl apply -f ingress.yaml
+                    echo "Deploying application..."
+
+                    kubectl --kubeconfig=$KUBECONFIG apply -f deployment.yaml
+                    kubectl --kubeconfig=$KUBECONFIG apply -f service.yaml
                     '''
                 }
             }
@@ -44,7 +67,7 @@ pipeline {
                 }
                 failure {
                     emailext subject: "❌ Deployment FAILED",
-                    body: "Kubernetes deployment failed. Check logs.",
+                    body: "Deployment failed. Check Jenkins logs.",
                     to: "${EMAIL}"
                 }
             }
@@ -54,16 +77,17 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG')]) {
                     sh '''
-                    kubectl get pods -o wide
-                    kubectl get svc
-                    kubectl get ingress
+                    echo "Verifying deployment..."
+
+                    kubectl --kubeconfig=$KUBECONFIG get pods -o wide
+                    kubectl --kubeconfig=$KUBECONFIG get svc
                     '''
                 }
             }
             post {
                 success {
                     emailext subject: "✅ Verification SUCCESS",
-                    body: "Pods, services, and ingress are running successfully.",
+                    body: "Pods and services verified successfully.",
                     to: "${EMAIL}"
                 }
                 failure {
