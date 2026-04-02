@@ -1,19 +1,11 @@
 {
   "name": "devops-html-app",
   "version": "1.0.0",
-  "description": "Static HTML/CSS/JS project for Jenkins CI/CD",
-  "main": "index.html",
+  "description": "Simple static HTML DevOps project",
   "scripts": {
-    "build": "zip -r devops-html-app.zip src/",
-    "lint:js": "eslint src/**/*.js || true",
-    "lint:css": "stylelint src/**/*.css || true",
-    "lint:all": "npm run lint:js && npm run lint:css"
+    "build": "zip -r devops-html-app.zip src/"
   },
-  "author": "Akram Syed",
+  "author": "Akram",
   "license": "MIT",
-  "devDependencies": {
-    "eslint": "^8.50.0",
-    "stylelint": "^15.16.0",
-    "stylelint-config-standard": "^30.0.0"
-  }
+  "dependencies": {}
 }
