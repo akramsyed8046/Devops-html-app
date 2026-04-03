@@ -75,18 +75,14 @@ pipeline {
         stage('Publish to Nexus') {
             steps {
                 withCredentials([string(credentialsId: 'nexus-token', variable: 'NEXUS_TOKEN')]) {
-                    sh '''
-                    VERSION=$(node -p "require('./package.json').version")
-                    if [[ "$VERSION" == *"-SNAPSHOT"* ]]; then
-                        REPO=http://3.110.170.36:8081/repository/npm-snapshots/
-                    else
-                        REPO=http://3.110.170.36:8081/repository/npm-releases/
-                    fi
+                sh '''
+    VERSION=$(node -p "require('./package.json').version")
+    REPO=http://3.110.170.36:8081/repository/maven-releases/
+    ARTIFACT="devops-html-app-${VERSION}.zip"
 
-                    echo "registry=$REPO" > .npmrc
-                    echo "//$REPO:_authToken=$NEXUS_TOKEN" >> .npmrc
-                    npm publish || echo "Publish failed, check package.json version"
-                    '''
+    # Use token for Nexus authentication
+    curl -v -u $NEXUS_TOKEN: --upload-file artifact/devops-html-app.zip $REPO$ARTIFACT
+    '''
                 }
             }
         }
