@@ -41,9 +41,12 @@ pipeline {
         }
 
         stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    sh 'sonar-scanner -Dsonar.projectKey=devops-html-app -Dsonar.sources=src'
+    steps {
+        withSonarQubeEnv("${SONARQUBE_ENV}") {  // This is your SonarQube server name in Jenkins
+            // Use the Jenkins-managed scanner
+            sh "${tool 'SonarQube-Scanner'}/bin/sonar-scanner \
+               -Dsonar.projectKey=devops-html-app \
+               -Dsonar.sources=src"
                 }
             }
         }
