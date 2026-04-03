@@ -100,6 +100,16 @@ pipeline {
             }
         }
 
+		stage('Update kubeconfig') {
+    steps {
+        sh '''
+        /usr/local/bin/aws eks update-kubeconfig \
+        --region ap-south-1 \
+        --name rehcluster
+        '''
+		  }
+}
+
         stage('Deploy to Kubernetes') {
             steps {
                 echo "Deploying to Kubernetes cluster..."
