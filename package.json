@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "Simple static HTML DevOps project",
   "scripts": {
-    "build": "zip -r devops-html-app.zip src/",
-    "prepublishOnly": "echo 'Preparing .npmrc for Nexus publish'"
+    "build": "zip -r devops-html-app.zip src/"
   },
   "author": "Akram",
   "license": "MIT",
