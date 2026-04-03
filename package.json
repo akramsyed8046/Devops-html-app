@@ -1,6 +1,6 @@
 {
   "name": "devops-html-app",
-  "version": "1.0.0", // change to 1.0.1-SNAPSHOT for snapshot builds
+  "version": "1.0.0",
   "description": "Simple static HTML DevOps project",
   "scripts": {
     "build": "zip -r devops-html-app.zip src/",
