@@ -109,7 +109,7 @@ pipeline {
             steps {
                 sh '''
                 docker rm -f devops-html-app || true
-                docker run -d --name devops-html-app -p 8080:8080 ${DOCKER_IMAGE}
+                docker run -d --name devops-html-app -p 8087:80 ${DOCKER_IMAGE}
                 '''
             }
         }
