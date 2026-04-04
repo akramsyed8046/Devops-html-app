@@ -92,7 +92,8 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 sh '''
-            
+              docker stop devopscont25 || true
+              docker rm devopscont25 || true
 
                 # Run new container
                 docker run -itd  --name devopscont25 -p 8025:80 akramsyed8046/devops-html-app:latest
