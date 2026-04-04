@@ -1,0 +1,7 @@
+npm install     → 1️⃣ Download dependencies
+      ↓
+npm run test    → 2️⃣ Test the SOURCE CODE first ✅
+      ↓
+npm run build   → 3️⃣ THEN create artifact 📦
+      ↓
+npm publish     → 4️⃣ Upload artifact to registry
