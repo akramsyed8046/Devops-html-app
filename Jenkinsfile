@@ -70,7 +70,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv("${SONARQUBE_ENV}") {
-                    sh "${tool 'SonarQube-Scanner'}/bin/sonar-scanner \
+                    sh "${tool 'sonar-scanner'}/bin/sonar-scanner \
                        -Dsonar.projectKey=devops-html-app \
                        -Dsonar.sources=src"
                 }
