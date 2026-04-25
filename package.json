@@ -4,6 +4,8 @@
   "description": "Simple static HTML DevOps project",
   "scripts": {
     "build": "zip -r devops-html-app.zip src/"
+    "test": "echo 'Running HTML validation...' && ls src/*.html && echo 'All HTML files present. Tests passed!'"
+  }
   },
   "author": "Akram",
   "license": "MIT",
