@@ -9,7 +9,7 @@ pipeline {
         DOCKER_IMAGE         = "akramsyed8046/devops-html-app:latest"
         DOCKER_CREDENTIALS   = "docker-hub"
         SONARQUBE_ENV        = "sonarqube"
-        NEXUS_REPO           = "http://35.154.185.85:8081/repository/raw-repo/"
+        NEXUS_REPO           = "http://65.1.181.49:8081/repository/raw-repo/"
         PATH                 = "${tool 'Node18'}/bin:${env.PATH}"
         KUBECONFIG           = "/var/lib/jenkins/.kube/config"
         AWS_REGION           = "ap-south-1"
