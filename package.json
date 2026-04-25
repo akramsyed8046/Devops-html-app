@@ -1,13 +1,12 @@
 {
   "name": "devops-html-app",
   "version": "1.0.0-SNAPSHOT",
-  "description": "Simple static HTML DevOps project",
+  "description": "DevOps HTML App",
   "scripts": {
-    "build": "zip -r devops-html-app.zip src/"
-    "test": "echo 'Running HTML validation...' && ls src/*.html && echo 'All HTML files present. Tests passed!'"
-  }
+    "build": "zip -r devops-html-app.zip src/",
+    "test": "htmlhint src/*.html"
   },
-  "author": "Akram",
-  "license": "MIT",
-  "dependencies": {}
+  "devDependencies": {
+    "htmlhint": "^1.1.4"
+  }
 }
