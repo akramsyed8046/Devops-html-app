@@ -3,17 +3,16 @@ pipeline {
     tools {
         nodejs 'Node18'
         jdk 'JDK21'
-      
     }
     environment {
-        DOCKER_IMAGE         = "akramsyed8046/devops-html-app:latest"
-        DOCKER_CREDENTIALS   = "docker-hub"
-        SONARQUBE_ENV        = "sonarqube"
-        NEXUS_REPO           = "http://65.1.181.49:8081/repository/raw-repo/"
-        PATH                 = "${tool 'Node18'}/bin:${env.PATH}"
-        KUBECONFIG           = "/var/lib/jenkins/.kube/config"
-        AWS_REGION           = "ap-south-1"
-        EKS_CLUSTER          = "Mangoes"
+        DOCKER_IMAGE       = "akramsyed8046/devops-html-app:latest"
+        DOCKER_CREDENTIALS = "docker-hub"
+        SONARQUBE_ENV      = "sonarqube"
+        NEXUS_REPO         = "http://65.1.181.49:8081/repository/raw-repo/"
+        PATH               = "${tool 'Node18'}/bin:${env.PATH}"
+        KUBECONFIG         = "/var/lib/jenkins/.kube/config"
+        AWS_REGION         = "ap-south-1"
+        EKS_CLUSTER        = "Mangoes"
     }
     stages {
 
@@ -58,12 +57,8 @@ pipeline {
                 '''
             }
             post {
-                always {
-                    echo "Test stage completed"
-                }
-                failure {
-                    echo "Tests failed! Check the logs above."
-                }
+                always { echo "Test stage completed" }
+                failure { echo "Tests failed! Check the logs above." }
             }
         }
 
@@ -114,19 +109,19 @@ pipeline {
             }
         }
 
-       stage('Push Docker Image') {
-    steps {
-        withCredentials([usernamePassword(
-            credentialsId: "${DOCKER_CREDENTIALS}",
-            usernameVariable: 'DOCKER_USER',
-            passwordVariable: 'DOCKER_PASS'
-        )]) {
-            sh """
-            echo "\${DOCKER_PASS}" | docker login -u "\${DOCKER_USER}" --password-stdin
-            docker push ${DOCKER_IMAGE}
-            docker logout
-            """
-              }
+        stage('Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: "${DOCKER_CREDENTIALS}",
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh """
+                    echo "\${DOCKER_PASS}" | docker login -u "\${DOCKER_USER}" --password-stdin
+                    docker push ${DOCKER_IMAGE}
+                    docker logout
+                    """
+                }
             }
         }
 
@@ -152,30 +147,7 @@ pipeline {
 
         stage('Deploy to Kubernetes') {
             steps {
-                sh """
-                # Check if deployment already exists
-                if kubectl get deployment devops-html-app --kubeconfig=${KUBECONFIG} > /dev/null 2>&1; then
-                    echo "Deployment exists — applying changes and forcing rollout..."
-                    kubectl apply -f deployment.yaml --kubeconfig=${KUBECONFIG}
-
-                    # Force re-pull of latest image (important when using :latest tag)
-                    kubectl rollout restart deployment/devops-html-app --kubeconfig=${KUBECONFIG}
-                else
-                    echo "Fresh deployment — applying for the first time..."
-                    kubectl apply -f deployment.yaml --kubeconfig=${KUBECONFIG}
-                fi
-
-                # Wait for rollout to finish (timeout 3 mins)
-                kubectl rollout status deployment/devops-html-app --kubeconfig=${KUBECONFIG} --timeout=180s
-
-                echo "Deployment successful!"
-                """
-            }
-            post {
-                failure {
-                    echo "Deployment failed! Rolling back to previous version..."
-                    sh "kubectl rollout undo deployment/devops-html-app --kubeconfig=${KUBECONFIG}"
-                }
+                sh "kubectl apply -f deployment.yaml --kubeconfig=${KUBECONFIG}"
             }
         }
 
