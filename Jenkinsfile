@@ -10,6 +10,9 @@ pipeline {
         SONARQUBE_ENV = "sonarqube"
         NEXUS_REPO = "http://35.154.185.85:8081/repository/raw-repo/"
         PATH = "${tool 'Node18'}/bin:${env.PATH}"
+        KUBECONFIG_PATH = "/var/lib/jenkins/.kube/config"
+        AWS_REGION          = "ap-south-1"        // ← add your region
+        EKS_CLUSTER         = "Mangoes" // ← add your cluster name
     }
     stages {
         stage('Checkout') {
@@ -101,5 +104,24 @@ pipeline {
                 '''
             }
         }
+
+          
+        stage('Configure AWS EKS') {
+            steps {
+                sh """
+                aws eks --region ${AWS_REGION} update-kubeconfig --name ${EKS_CLUSTER}
+                export KUBECONFIG=${KUBECONFIG_PATH}
+                kubectl get nodes
+                """
+            }
+        }
+        
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh """
+                export KUBECONFIG=${KUBECONFIG_PATH}
+                kubectl apply -f deployment.yaml
+                
+                """
     }
 }
