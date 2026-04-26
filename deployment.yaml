@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: devops-html-container
-        image: shivadocker2997/devops-html-app:latest
+        image: akramsyed8046/devops-html-app:latest
         ports:
         - containerPort: 80
 
